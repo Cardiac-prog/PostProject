@@ -32,9 +32,6 @@
     </table>
     <br>
 
-    <%= link_to "Edit Post", edit_post_path(@post) %><br><br>
-    <%= link_to "Delete Post", post_path(@post), data: {turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this post?" } %>
-
     <br><br>
     <h2>Comments</h2>
     <% @post.comments.each do |comment| %>
@@ -52,10 +49,8 @@
     <p>
       <%= link_to "Edit", edit_post_comment_path(@post, comment) %>
   
-      <%= link_to "Delete", [comment.post, comment], data: {
-                   turbo_method: :delete,
-                   turbo_confirm: "Are you sure?"
-      }, style: "margin-left: 10px;" %> 
+      <%= link_to 'Delete', [comment.post, comment], data: { turbo_method: :delete ,turbo_confirm: 'Are you sure?' } %>
+
     </p><br>
     <% end %>
 

@@ -1,7 +1,5 @@
 class PostsController < ApplicationController
 
-  http_basic_authenticate_with name: "ayaan", password: "4321", except: [:index, :show]
-
   def index
     @posts = Post.all
   end
@@ -10,7 +8,7 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
   end
 
-  def new    
+  def new
     @post = Post.new
   end
 
@@ -20,8 +18,8 @@ class PostsController < ApplicationController
     if @post.save
       redirect_to root_path, status: :see_other
     else
-      render :new, status: :unprocessable_entity  
-    end  
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -36,11 +34,12 @@ class PostsController < ApplicationController
       redirect_to root_path, status: :see_other
     else
       render :edit, status: :unprocessable_entity
-    end  
+    end
   end
 
   def destroy
     @post = Post.find(params[:id])
+
 
     @post.destroy
 
