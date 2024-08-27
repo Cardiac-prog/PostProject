@@ -1,8 +1,13 @@
 class CommentsController < ApplicationController
   def create
     @post = Post.find(params[:post_id])
-    @comment = @post.comments.create(comment_params)
-    redirect_to post_path(@post)
+    @comment = @post.comments.new(comment_params)
+    @comment.user = current_user
+     if @comment.save
+       redirect_to post_path(@post), notice: "Comment was successfully created."
+     else
+       redirect_to post_path(@post), alert: "Comment could not be created."
+     end
   end
 
 
@@ -12,21 +17,30 @@ class CommentsController < ApplicationController
   end
 
   def update
-    @post = Post.find(params[:post_id])
-    @comment = @post.comments.find(params[:id])
+  @post = Post.find(params[:post_id])
+  @comment = @post.comments.find(params[:id])
 
+  if can?(:update, @comment)
     if @comment.update(comment_params)
-      redirect_to post_path(@post)
+      redirect_to post_path(@post), notice: "Comment was successfully updated."
     else
-      render :edit, status: :unprocessable_entity
+      redirect_to post_path(@post), alert: "Comment could not be updated."
     end
+  else
+    redirect_to post_path(@post), notice: "You can't access this."
   end
+end
+
 
   def destroy
     @post = Post.find(params[:post_id])
     @comment = @post.comments.find(params[:id])
-    @comment.destroy
-    redirect_to post_path(@post), status: :see_other
+    if can?(:destroy, @comment)
+      @comment.destroy
+      redirect_to post_path(@post), status: :see_other
+    else
+      redirect_to post_path, notice: "You can't destroy this comment."
+    end
   end
 
   private

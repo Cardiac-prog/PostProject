@@ -59,5 +59,6 @@ end
 gem "devise", "~> 4.9"
 
 group :development, :test do
-  gem 'byebug'
+  gem "byebug"
 end
+gem "cancancan", "~> 3.3"

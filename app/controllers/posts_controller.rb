@@ -1,5 +1,9 @@
 class PostsController < ApplicationController
+  # rescue_from CanCan::AccessDenied do |exception|
+  #   redirect_back fallback_location: root_path, alert: exception.message
+  # end
 
+  # before_action :authorize_post, only: [ :edit, :update, :destroy ]
   def index
     @posts = Post.all
   end
@@ -13,7 +17,7 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = Post.new(post_params)
+    @post =  current_user.posts.new(post_params)
 
     if @post.save
       redirect_to root_path, status: :see_other
@@ -28,22 +32,32 @@ class PostsController < ApplicationController
 
   def update
     @post = Post.find(params[:id])
+    if can?(:update, @post)
+      if @post.update(post_params)
 
-    if @post.update(post_params)
-
-      redirect_to root_path, status: :see_other
+        redirect_to root_path, status: :see_other
+      else
+        render :edit, status: :unprocessable_entity
+      end
     else
-      render :edit, status: :unprocessable_entity
+  redirect_to root_path, notice:  "You can't access this."
     end
   end
 
   def destroy
-    @post = Post.find(params[:id])
+      @post = Post.find(params[:id])
+      if can?(:destroy, @post)
 
+      @post.destroy
 
-    @post.destroy
+      redirect_to root_path, notice: "Post was successfully destroyed."
+      else
+      redirect_to root_path, notice: "You can't destroy this post."
+      end
+  end
 
-    redirect_to root_path, status: :see_other
+  def authorize_post
+    authorize! :manage, @post
   end
 
   private
