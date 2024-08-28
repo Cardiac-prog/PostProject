@@ -28,32 +28,36 @@ class PostsController < ApplicationController
 
   def edit
     @post = Post.find(params[:id])
+    authorize @post      # Pundit authorization
   end
 
   def update
     @post = Post.find(params[:id])
-    if can?(:update, @post)
+    authorize @post      # Pundit authorization
+      # if can?(:update, @post)       Cancan
       if @post.update(post_params)
 
         redirect_to root_path, status: :see_other
       else
         render :edit, status: :unprocessable_entity
       end
-    else
-  redirect_to root_path, notice:  "You can't access this."
-    end
+    #  else
+    # redirect_to root_path, notice:  "You can't access this."
+    # end
   end
 
   def destroy
       @post = Post.find(params[:id])
-      if can?(:destroy, @post)
+     # if can?(:destroy, @post)
+     authorize @post      # Pundit authorization
 
       @post.destroy
 
       redirect_to root_path, notice: "Post was successfully destroyed."
-      else
-      redirect_to root_path, notice: "You can't destroy this post."
-      end
+    #  else          Cancan
+
+    #  redirect_to root_path, notice: "You can't destroy this post."      Cancan
+    #  end      Cancan
   end
 
   def authorize_post

@@ -62,3 +62,5 @@ group :development, :test do
   gem "byebug"
 end
 gem "cancancan", "~> 3.3"
+
+gem "pundit"
