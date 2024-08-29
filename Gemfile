@@ -64,3 +64,4 @@ end
 gem "cancancan", "~> 3.3"
 
 gem "pundit"
+gem "pagy"

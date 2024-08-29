@@ -1,11 +1,16 @@
 class PostsController < ApplicationController
-  # rescue_from CanCan::AccessDenied do |exception|
-  #   redirect_back fallback_location: root_path, alert: exception.message
-  # end
-
-  # before_action :authorize_post, only: [ :edit, :update, :destroy ]
+# rescue_from CanCan::AccessDenied do |exception|
+#   redirect_back fallback_location: root_path, alert: exception.message
+# end
+before_action :set_post, only: [ :edit, :update, :destroy ]
+   before_action :authorize_post, only: [ :edit, :update, :destroy ]
   def index
-    @posts = Post.all
+    if params[:query].present?
+      @pagy, @posts = pagy(Post.search_posts(params[:query]))
+    else
+      @pagy, @posts = pagy(Post.all)
+    end
+    # @pagy, @posts = pagy(Post.all)
   end
 
   def show
@@ -27,12 +32,12 @@ class PostsController < ApplicationController
   end
 
   def edit
-    @post = Post.find(params[:id])
+    # @post = Post.find(params[:id])
     authorize @post      # Pundit authorization
   end
 
   def update
-    @post = Post.find(params[:id])
+    # @post = Post.find(params[:id])
     authorize @post      # Pundit authorization
       # if can?(:update, @post)       Cancan
       if @post.update(post_params)
@@ -47,7 +52,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
-      @post = Post.find(params[:id])
+     # @post = Post.find(params[:id])
      # if can?(:destroy, @post)
      authorize @post      # Pundit authorization
 
@@ -60,8 +65,12 @@ class PostsController < ApplicationController
     #  end      Cancan
   end
 
+  def set_post
+    @post = Post.find(params[:id])
+  end
+
   def authorize_post
-    authorize! :manage, @post
+    authorize @post
   end
 
   private

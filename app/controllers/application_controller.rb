@@ -1,8 +1,10 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
-  include Pundit   # Pundti
+  include Pundit::Authorization   # Pundti
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized   # Pundit
+
+  include Pagy::Backend  # Pagy
 
   def after_sign_in_path_for(resource)
     root_path
