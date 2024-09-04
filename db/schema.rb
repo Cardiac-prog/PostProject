@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_08_27_104522) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_02_230023) do
   create_table "comments", force: :cascade do |t|
     t.string "commenter"
     t.text "body"
@@ -20,6 +20,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_08_27_104522) do
     t.integer "user_id", null: false
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "jwt_denylists", force: :cascade do |t|
+    t.string "jti"
+    t.datetime "exp"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["jti"], name: "index_jwt_denylists_on_jti"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -41,7 +49,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_08_27_104522) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role"
+    t.string "jti", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

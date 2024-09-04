@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+
   before_action :authenticate_user!
 
   include Pundit::Authorization   # Pundti
@@ -30,4 +31,18 @@ class ApplicationController < ActionController::Base
       redirect_to(root_path)
     end
   end
+
+# Basic Authetication for API
+=begin
+  def authenticate_user!
+    if request.authorization
+      authenticate_or_request_with_http_basic do |username, password|
+        user = User.find_by(email: username)
+        user && user.valid_password?(password)
+      end
+    else
+      authenticate_or_request_with_http_basic
+    end
+  end
+=end
 end
