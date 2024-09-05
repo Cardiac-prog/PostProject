@@ -3,6 +3,11 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   before_create :generate_jti
 
+  def send_reset_password_instructions
+    token = set_reset_password_token
+    ForgotPasswordJob.perform_later(self, token)
+    token
+  end
   private
 
   def generate_jti

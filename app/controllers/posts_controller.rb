@@ -25,6 +25,8 @@ before_action :set_post, only: [ :edit, :update, :destroy ]
     @post =  current_user.posts.new(post_params)
 
     if @post.save
+
+
       redirect_to root_path, status: :see_other
     else
       render :new, status: :unprocessable_entity
