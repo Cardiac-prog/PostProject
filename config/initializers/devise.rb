@@ -28,6 +28,9 @@ Devise.setup do |config|
 
   config.mailer = "Devise::Mailer"
 
+  config.reset_password_within = 6.hours
+
+
   config.jwt do |jwt|
     jwt.secret = Rails.application.credentials.dig(:devise, :jwt_secret_key)
   end
